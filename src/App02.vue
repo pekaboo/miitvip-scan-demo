@@ -23,7 +23,6 @@
          word-break:break-all;
          word-wrap:break-word; ">所有设备<br>{{JSON.stringify(devices)}}</div>
         </div>
-     
 </template>
 
 <script lang="ts">
@@ -73,29 +72,29 @@
                             var device =parseInt(localStorage.getItem("device")) ;
                             console.log(device);
                             
-                            // if(device>=0){
-                            //    //did 在devices 里面
-                            //    if(devices.length<device+1){
-                            //           device =  0
-                            //    } 
-                            //     this.device =  device;
+                            if(device>=0){
+                               //did 在devices 里面
+                               if(devices.length<device+1){
+                                      device =  0
+                               } 
+                                this.device =  device;
                                
-                            //     this.decode(device)
-                            //     return;
-                            // }
-                            
-                            let id = devices[0].deviceId
-                            for (let i = 0; i < devices.length; i++) {
-                                if (
-                                    devices[i].label.indexOf('back') !== -1 ||
-                                    devices[i].label.indexOf('RGB') !== -1
-                                ) {
-                                    id = devices[i].deviceId 
-                                    this.device =  i;
-                                    break
-                                }
+                                this.decode(device)
+                                return;
                             }
-                            this.decode(id)
+                            
+                            // let id = devices[0].deviceId
+                            // for (let i = 0; i < devices.length; i++) {
+                            //     if (
+                            //         devices[i].label.indexOf('back') !== -1 ||
+                            //         devices[i].label.indexOf('RGB') !== -1
+                            //     ) {
+                            //         id = devices[i].deviceId 
+                            //         this.device =  i;
+                            //         break
+                            //     }
+                            // }
+                            // this.decode(id)
                         }
                     }).catch((err) => {
                         this.errMsg = err
@@ -108,7 +107,6 @@
                 }
             },
 
-            
             decode(id: any) {
                 this.reader.reset()
                 this.$message.destroy()
