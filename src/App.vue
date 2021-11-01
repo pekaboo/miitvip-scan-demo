@@ -10,6 +10,8 @@
         <p>扫描结果：<a :href="content" target="_blank">{{ content }}</a></p>
         <p>扫描时间：{{ time }}</p>
     </a-modal>
+ 
+        <!-- <a-button type="primary" size="large" @click="changeCamera">切换摄像头</a-button> -->
 </template>
 
 <script lang="ts">
@@ -43,7 +45,8 @@
                         duration: 0
                     })
                 } else {
-                    this.reader.listVideoInputDevices().then((devices) => {
+                    this.reader.listVideoInputDevices().then((devices) => { // 打开摄像头
+                        alert(JSON.stringify(devices))
                         if (devices.length <= 0) {
                             this.$message.destroy();
                             this.$message.warning({
@@ -131,6 +134,10 @@
                     })
                 }
                 reader.readAsDataURL(file)
+            },
+
+            changeCamera() {
+                window.location.reload()
             },
 
             reload() {
