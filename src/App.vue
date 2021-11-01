@@ -12,13 +12,13 @@
     </a-modal>
  <!-- :default-value="device.label" -->
     <a-select v-model="value"  style="width: 100%;font-size:60%"   placeholder="请选择" @change="handleChange">
-        <a-select-option v-for="(item) in devices" :value="item" :key="item.deviceId">{{ item.label }}</a-select-option>
+        <a-select-option v-for="(item,idx ) in devices" :value="idx" :key="item.deviceId">{{ item.label }}</a-select-option>
         </a-select>
 
         <div>
             <div style="font-weight:bold;color:green;padding-top:20px;font-sise:60%;   white-space:normal;
          word-break:break-all;
-         word-wrap:break-word; ">当前设备<br>{{JSON.stringify(device)}}</div>
+         word-wrap:break-word; ">当前设备<br>{{  device}}</div>
         <div style="font-weight:bold;color:blue;padding-top:20px;font-sise:60%;   white-space:normal;
          word-break:break-all;
          word-wrap:break-word; ">所有设备<br>{{JSON.stringify(devices)}}</div>
@@ -69,33 +69,32 @@
                                 duration: 0
                             })
                         } else {
-                            let device = JSON.parse(localStorage.getItem("device"))
-                            if(device){
+                            var device =parseInt(localStorage.getItem("device")) ;
+                            console.log(device);
+                            
+                            if(device>=0){
                                //did 在devices 里面
-                               var flag = false;
-                               devices.forEach(d => {
-                                   if(d.deviceId == device.deviceId){
-                                        flag = true;
-                                   }
-                               });
-                               if(flag)  {
-                                   this.decode(device.deviceId) 
-                                   this.device = device
-                                   return
-                               }
+                               if(devices.length<device+1){
+                                      device =  0
+                               } 
+                                this.device =  device;
+                               
+                                this.decode(device)
+                                return;
                             }
-                            let id = devices[0].deviceId
-                            for (let i = 0; i < devices.length; i++) {
-                                if (
-                                    devices[i].label.indexOf('back') !== -1 ||
-                                    devices[i].label.indexOf('RGB') !== -1
-                                ) {
-                                    id = devices[i].deviceId
-                                    break
-                                }
-                            }
-                            this.decode(id)
-                            this.device =  this.devices.filter(d => d.deviceId === id)[0]
+                            
+                            // let id = devices[0].deviceId
+                            // for (let i = 0; i < devices.length; i++) {
+                            //     if (
+                            //         devices[i].label.indexOf('back') !== -1 ||
+                            //         devices[i].label.indexOf('RGB') !== -1
+                            //     ) {
+                            //         id = devices[i].deviceId 
+                            //         this.device =  i;
+                            //         break
+                            //     }
+                            // }
+                            // this.decode(id)
                         }
                     }).catch((err) => {
                         this.errMsg = err
