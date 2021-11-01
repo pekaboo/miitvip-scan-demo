@@ -11,12 +11,17 @@
         <p>扫描时间：{{ time }}</p>
     </a-modal>
  
-        <!-- <a-button type="primary" size="large" @click="changeCamera">切换摄像头</a-button> -->
+    <a-select v-model="value" style="width: 100%;"   placeholder="请选择" @change="handleChange">
+        <a-select-option v-for="item in devices" :value="item.deviceId" :key="item.deviceId">{{ item.deviceId }}</a-select-option>
+        </a-select>
+
+        <div style="font-weight:bold;color:green;padding-top:20px;font-sise:60%">当前设备{{device}}</div>
 </template>
 
 <script lang="ts">
-    import { defineComponent, ref, reactive } from 'vue'
-    import { BrowserMultiFormatReader } from '@zxing/library'
+    import { defineComponent, ref, reactive  } from 'vue'
+    import { BrowserMultiFormatReader } from '@zxing/library' 
+
 
     export default defineComponent({
         
@@ -24,11 +29,13 @@
             const iphone = ref(false)
             const errMsg = ref('')
             const time = ref(null)
+            const devices = ref(null)
+            const device = ref(null)
             const content = ref(null)
             const preview = ref(false)
             const modalVisible = ref(false)
             const reader = new BrowserMultiFormatReader()
-            return {iphone, errMsg, time, content, preview, modalVisible, reader}
+            return {iphone, errMsg, time, content,devices,device, preview, modalVisible, reader}
         },
 
         methods: {
@@ -45,8 +52,9 @@
                         duration: 0
                     })
                 } else {
-                    this.reader.listVideoInputDevices().then((devices) => { // 打开摄像头
-                        alert(JSON.stringify(devices))
+                    this.reader.listVideoInputDevices().then((devices) => {
+                        alert(JSON.stringify(devices)) 
+                        this.devices = devices
                         if (devices.length <= 0) {
                             this.$message.destroy();
                             this.$message.warning({
@@ -54,6 +62,21 @@
                                 duration: 0
                             })
                         } else {
+                            let did = localStorage.getItem("deviceId")
+                            if(did){
+                               //did 在devices 里面
+                               var flag = false;
+                               devices.forEach(d => {
+                                   if(d.deviceId == did){
+                                        flag = true;
+                                   }
+                               });
+                               if(flag)  {
+                                   this.decode(did)
+                                   this.device = did
+                                   return
+                               }
+                            }
                             let id = devices[0].deviceId
                             for (let i = 0; i < devices.length; i++) {
                                 if (
@@ -64,6 +87,7 @@
                                     break
                                 }
                             }
+                             this.device = id
                             this.decode(id)
                         }
                     }).catch((err) => {
@@ -136,10 +160,11 @@
                 reader.readAsDataURL(file)
             },
 
-            changeCamera() {
-                window.location.reload()
+            handleChange(value) {
+               console.log("你选择了:" + value);
+               localStorage.setItem("deviceId",value);
+               window.location.reload()
             },
-
             reload() {
                 window.location.reload()
             },
