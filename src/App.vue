@@ -54,7 +54,7 @@
                     })
                 } else {
                     this.reader.listVideoInputDevices().then((devices) => {
-                        alert(JSON.stringify(devices)) 
+                        // alert(JSON.stringify(devices)) 
                         this.devices = devices
                         if (devices.length <= 0) {
                             this.$message.destroy();
