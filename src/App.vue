@@ -1,7 +1,7 @@
 <template>
     <!-- <a href="https://www.makeit.vip" target="_blank"><img class="logo" alt="Makeit Vip logo" src="https://file.makeit.vip/MIIT/M00/00/00/ajRkHV_pUyOALE2LAAAtlj6Tt_s370.png" /></a> -->
-    <video class="video" id="video" ref="video" autoplay v-if="!iphone"></video>
-    <div class="photograph" v-if="iphone">
+    <video class="video" id="video" ref="video" autoplay  ></video>
+    <div class="photograph"  >
         <a-button type="danger" size="large">拍照 - 扫描解析二维码 / 条形码</a-button>
         <input class="file" type="file" ref="camera" capture="camera" accept="image/*" @change="change" />
         <img id="preview" alt="preview" v-if="preview" />
@@ -11,10 +11,9 @@
         <p>扫描时间：{{ time }}</p>
     </a-modal>
  <!-- :default-value="device.label" -->
-    <a-select v-model="value"  style="width: 100%;font-size:60%"   placeholder="请选择" @change="handleChange">
+    <a-select v-model="value"  style="padding-top:25px;width: 100%;font-size:60%"   placeholder="请选择" @change="handleChange">
         <a-select-option v-for="(item,idx ) in devices" :value="idx" :key="item.deviceId">{{ item.label }}</a-select-option>
-        </a-select>
-
+        </a-select> 
         <div>
             <div style="font-weight:bold;color:green;padding-top:20px;font-sise:60%;   white-space:normal;
          word-break:break-all;
@@ -22,8 +21,7 @@
         <div style="font-weight:bold;color:blue;padding-top:20px;font-sise:60%;   white-space:normal;
          word-break:break-all;
          word-wrap:break-word; ">所有设备<br>{{JSON.stringify(devices)}}</div>
-        </div>
-     
+        </div> 
 </template>
 
 <script lang="ts">
@@ -52,16 +50,19 @@
                     content: '正在尝试拉起摄像头 ...',
                     duration: 0
                 })
-                if (!navigator.mediaDevices) {
+                console.log(navigator.mediaDevices);
+                
+                if (!navigator.mediaDevices) { //是Iphone
                     this.$message.destroy()
                     this.iphone = true
                     this.$message.success({
                         content: 'iPhone 其它浏览器无权限自动开启摄像头 ...',
                         duration: 0
                     })
-                } else {
-                    this.reader.listVideoInputDevices().then((devices) => {
-                        // alert(JSON.stringify(devices)) 
+                } else {//其他
+                  // this.reader.listVideoInputDevices().then(async (videoInputDevices) => {}).catch((err) => {})
+                    this.reader.listVideoInputDevices().then((devices) => { //获取摄像头列表
+                        devices.push({"deviceId":"135e9f6928e41d6c7f8afc0af19f6fd224186f9af9623e79dafe8236bbf7e02c","label":"Integrated Camera (5986:2113)","kind":"videoinput","groupId":"c3c25df9b578fc13ed99aba2c718e278895bb286808fff8ec33c6c9b1748126c"})
                         this.devices = devices
                         if (devices.length <= 0) {
                             this.$message.destroy();
@@ -78,9 +79,9 @@
                                if(devices.length<device+1){
                                       device =  0
                                } 
-                                this.device =  device;
+                                this.device =  devices[device].deviceId;
                                
-                                this.decode(device)
+                                this.decode(devices[device].deviceId)
                                 return;
                             }
                             
@@ -110,6 +111,7 @@
 
             
             decode(id: any) {
+                // alert(id)
                 this.reader.reset()
                 this.$message.destroy()
                 this.$message.success({
