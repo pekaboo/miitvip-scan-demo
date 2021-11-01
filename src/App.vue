@@ -1,5 +1,5 @@
 <template>
-    <a href="https://www.makeit.vip" target="_blank"><img class="logo" alt="Makeit Vip logo" src="https://file.makeit.vip/MIIT/M00/00/00/ajRkHV_pUyOALE2LAAAtlj6Tt_s370.png" /></a>
+    <!-- <a href="https://www.makeit.vip" target="_blank"><img class="logo" alt="Makeit Vip logo" src="https://file.makeit.vip/MIIT/M00/00/00/ajRkHV_pUyOALE2LAAAtlj6Tt_s370.png" /></a> -->
     <video class="video" id="video" ref="video" autoplay v-if="!iphone"></video>
     <div class="photograph" v-if="iphone">
         <a-button type="danger" size="large">拍照 - 扫描解析二维码 / 条形码</a-button>
@@ -10,9 +10,8 @@
         <p>扫描结果：<a :href="content" target="_blank">{{ content }}</a></p>
         <p>扫描时间：{{ time }}</p>
     </a-modal>
-
-
-      <a-select v-model="value"  style="width: 100%;font-size:60%"   placeholder="请选择" @change="handleChange">
+ <!-- :default-value="device.label" -->
+    <a-select v-model="value"  style="width: 100%;font-size:60%"   placeholder="请选择" @change="handleChange">
         <a-select-option v-for="(item,idx ) in devices" :value="idx" :key="item.deviceId">{{ item.label }}</a-select-option>
         </a-select>
 
@@ -24,13 +23,13 @@
          word-break:break-all;
          word-wrap:break-word; ">所有设备<br>{{JSON.stringify(devices)}}</div>
         </div>
-
-        
+     
 </template>
 
 <script lang="ts">
-    import { defineComponent, ref, reactive } from 'vue'
-    import { BrowserMultiFormatReader } from '@zxing/library'
+    import { defineComponent, ref, reactive  } from 'vue'
+    import { BrowserMultiFormatReader } from '@zxing/library' 
+
 
     export default defineComponent({
         
@@ -38,9 +37,9 @@
             const iphone = ref(false)
             const errMsg = ref('')
             const time = ref(null)
-            const content = ref(null)
             const devices = ref(null)
             const device = ref(null)
+            const content = ref(null)
             const preview = ref(false)
             const modalVisible = ref(false)
             const reader = new BrowserMultiFormatReader()
@@ -62,6 +61,8 @@
                     })
                 } else {
                     this.reader.listVideoInputDevices().then((devices) => {
+                        // alert(JSON.stringify(devices)) 
+                        this.devices = devices
                         if (devices.length <= 0) {
                             this.$message.destroy();
                             this.$message.warning({
@@ -69,14 +70,28 @@
                                 duration: 0
                             })
                         } else {
-                            this.devices = devices
+                            var device =parseInt(localStorage.getItem("device")) ;
+                            console.log(device);
+                            
+                            // if(device>=0){
+                            //    //did 在devices 里面
+                            //    if(devices.length<device+1){
+                            //           device =  0
+                            //    } 
+                            //     this.device =  device;
+                               
+                            //     this.decode(device)
+                            //     return;
+                            // }
+                            
                             let id = devices[0].deviceId
                             for (let i = 0; i < devices.length; i++) {
                                 if (
                                     devices[i].label.indexOf('back') !== -1 ||
                                     devices[i].label.indexOf('RGB') !== -1
                                 ) {
-                                    id = devices[i].deviceId
+                                    id = devices[i].deviceId 
+                                    this.device =  i;
                                     break
                                 }
                             }
@@ -93,6 +108,7 @@
                 }
             },
 
+            
             decode(id: any) {
                 this.reader.reset()
                 this.$message.destroy()
@@ -152,6 +168,11 @@
                 reader.readAsDataURL(file)
             },
 
+            handleChange(value) {
+               console.log("你选择了:" + value);
+               localStorage.setItem("device",JSON.stringify(value));
+               window.location.reload()
+            },
             reload() {
                 window.location.reload()
             },
