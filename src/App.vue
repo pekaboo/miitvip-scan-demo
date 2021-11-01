@@ -178,10 +178,12 @@
             },
 
             cancel() {
-                this.$message.success({
-                    content: '上次扫描解析成功，请刷新后再次尝试识别 ...',
-                    duration: 0
-                })
+                // this.$message.success({
+                //     content: '上次扫描解析成功，请刷新后再次尝试识别 ...',
+                //     duration: 0
+                // })
+                this.modalVisible = false;
+                this.decode(this.device)
             }
         },
 
