@@ -1,5 +1,5 @@
 <template>
-    <a href="https://www.makeit.vip" target="_blank"><img class="logo" alt="Makeit Vip logo" src="https://file.makeit.vip/MIIT/M00/00/00/ajRkHV_pUyOALE2LAAAtlj6Tt_s370.png" /></a>
+    <!-- <a href="https://www.makeit.vip" target="_blank"><img class="logo" alt="Makeit Vip logo" src="https://file.makeit.vip/MIIT/M00/00/00/ajRkHV_pUyOALE2LAAAtlj6Tt_s370.png" /></a> -->
     <video class="video" id="video" ref="video" autoplay v-if="!iphone"></video>
     <div class="photograph" v-if="iphone">
         <a-button type="danger" size="large">拍照 - 扫描解析二维码 / 条形码</a-button>
@@ -10,17 +10,19 @@
         <p>扫描结果：<a :href="content" target="_blank">{{ content }}</a></p>
         <p>扫描时间：{{ time }}</p>
     </a-modal>
- 
-    <a-select v-model="value" :default-value="device" style="width: 100%;font-size:60%"   placeholder="请选择" @change="handleChange">
-        <a-select-option v-for="item in devices" :value="item.deviceId" :key="item.deviceId">{{ item.deviceId }}</a-select-option>
+ <!-- :default-value="device.label" -->
+    <a-select v-model="value"  style="width: 100%;font-size:60%"   placeholder="请选择" @change="handleChange">
+        <a-select-option v-for="(item) in devices" :value="item" :key="item.deviceId">{{ item.label }}</a-select-option>
         </a-select>
 
-        <div style="font-weight:bold;color:green;padding-top:20px;font-sise:60%;   white-space:normal;
+        <div>
+            <div style="font-weight:bold;color:green;padding-top:20px;font-sise:60%;   white-space:normal;
          word-break:break-all;
-         word-wrap:break-word; ">当前设备<br>{{device}}</div>
+         word-wrap:break-word; ">当前设备<br>{{JSON.stringify(device)}}</div>
         <div style="font-weight:bold;color:blue;padding-top:20px;font-sise:60%;   white-space:normal;
          word-break:break-all;
          word-wrap:break-word; ">所有设备<br>{{JSON.stringify(devices)}}</div>
+        </div>
 </template>
 
 <script lang="ts">
@@ -67,18 +69,18 @@
                                 duration: 0
                             })
                         } else {
-                            let did = localStorage.getItem("deviceId")
-                            if(did){
+                            let device = JSON.parse(localStorage.getItem("device"))
+                            if(device){
                                //did 在devices 里面
                                var flag = false;
                                devices.forEach(d => {
-                                   if(d.deviceId == did){
+                                   if(d.deviceId == device.deviceId){
                                         flag = true;
                                    }
                                });
                                if(flag)  {
-                                   this.decode(did)
-                                   this.device = did
+                                   this.decode(device.deviceId) 
+                                   this.device = device
                                    return
                                }
                             }
@@ -92,8 +94,8 @@
                                     break
                                 }
                             }
-                             this.device = id
                             this.decode(id)
+                            this.device =  this.devices.filter(d => d.deviceId === id)[0]
                         }
                     }).catch((err) => {
                         this.errMsg = err
@@ -167,7 +169,7 @@
 
             handleChange(value) {
                console.log("你选择了:" + value);
-               localStorage.setItem("deviceId",value);
+               localStorage.setItem("device",JSON.stringify(value));
                window.location.reload()
             },
             reload() {
