@@ -73,16 +73,16 @@
                             var device =parseInt(localStorage.getItem("device")) ;
                             console.log(device);
                             
-                            // if(device>=0){
-                            //    //did 在devices 里面
-                            //    if(devices.length<device+1){
-                            //           device =  0
-                            //    } 
-                            //     this.device =  device;
+                            if(device>=0){
+                               //did 在devices 里面
+                               if(devices.length<device+1){
+                                      device =  0
+                               } 
+                                this.device =  device;
                                
-                            //     this.decode(device)
-                            //     return;
-                            // }
+                                this.decode(device)
+                                return;
+                            }
                             
                             let id = devices[0].deviceId
                             for (let i = 0; i < devices.length; i++) {
