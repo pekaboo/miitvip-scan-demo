@@ -62,7 +62,7 @@
                 } else {//其他
                   // this.reader.listVideoInputDevices().then(async (videoInputDevices) => {}).catch((err) => {})
                     this.reader.listVideoInputDevices().then((devices) => { //获取摄像头列表
-                        devices.push({"deviceId":"135e9f6928e41d6c7f8afc0af19f6fd224186f9af9623e79dafe8236bbf7e02c","label":"Integrated Camera (5986:2113)","kind":"videoinput","groupId":"c3c25df9b578fc13ed99aba2c718e278895bb286808fff8ec33c6c9b1748126c"})
+                        // devices.push({"deviceId":"135e9f6928e41d6c7f8afc0af19f6fd224186f9af9623e79dafe8236bbf7e02c","label":"Integrated Camera (5986:2113)","kind":"videoinput","groupId":"c3c25df9b578fc13ed99aba2c718e278895bb286808fff8ec33c6c9b1748126c"})
                         this.devices = devices
                         if (devices.length <= 0) {
                             this.$message.destroy();
