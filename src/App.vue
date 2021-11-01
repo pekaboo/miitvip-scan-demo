@@ -11,12 +11,16 @@
         <p>扫描时间：{{ time }}</p>
     </a-modal>
  
-    <a-select v-model="value" :default-value="device" style="width: 100%;"   placeholder="请选择" @change="handleChange">
+    <a-select v-model="value" :default-value="device" style="width: 100%;font-size:60%"   placeholder="请选择" @change="handleChange">
         <a-select-option v-for="item in devices" :value="item.deviceId" :key="item.deviceId">{{ item.deviceId }}</a-select-option>
         </a-select>
 
-        <div style="font-weight:bold;color:green;padding-top:20px;font-sise:60%">当前设备<br>{{device}}</div>
-        <div style="font-weight:bold;color:blue;padding-top:20px;font-sise:60%">所有设备<br>{{JSON.stringify(devices)}}</div>
+        <div style="font-weight:bold;color:green;padding-top:20px;font-sise:60%;   white-space:normal;
+         word-break:break-all;
+         word-wrap:break-word; ">当前设备<br>{{device}}</div>
+        <div style="font-weight:bold;color:blue;padding-top:20px;font-sise:60%;   white-space:normal;
+         word-break:break-all;
+         word-wrap:break-word; ">所有设备<br>{{JSON.stringify(devices)}}</div>
 </template>
 
 <script lang="ts">
